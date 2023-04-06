@@ -1,11 +1,13 @@
-const users = require('./data');
-const express = require('express');
+const auth = require('./auth');
 const session = require('express-session');
+
+const express = require('express');
 const bodyParser = require('body-parser');
+
 const port = 3001;
-const path = require('path');
 const app = express();
 const cors = require('cors');
+const path = require('path');
 
 app.use(session({
     secret: 'secret', // secret é usado para assinar o cookie de sessão, para que ele não possa ser alterado.
@@ -26,30 +28,14 @@ app.get('/', (req, res) => {
     res.render('http://localhost:3000/');
 });
 
-app.post("/login", (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    // percorre o array de usuários e verifica se o usuário e a senha estão corretos
-    const user = users.find(user => user.username === username && user.password === password);
-
-    // se o usuário e a senha estiverem corretos, cria uma sessão para o usuário
-    try {
-        if (user && user.password === password) {
-            req.session.loggedin = true;
-            req.session.username = username;
-            console.log(req.session);
-            res.status(200).json({
-                message: 'Usuário autenticado com sucesso!'
-            });
-        } else {
-            console.log('Usuário ou senha incorretos!');
-            res.status(401).json({
-                message: 'Usuário ou senha incorretos!'
-            });
-        }
-    }catch (err) {
-        console.log(err);
+app.post('/login', async (req, res) => {
+    const user = await auth.autentication(req.body);
+    if(user.auth){
+        req.session.user = user;
+        res.status(200).json(user);
+    }
+    else{
+        res.status(401).json(user);
     }
 });
 
