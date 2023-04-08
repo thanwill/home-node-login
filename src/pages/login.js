@@ -5,9 +5,11 @@ function Login() {
   const [error, setError] = useState("");
 
   const [form, setForm] = useState({
-    username: "",
+    email: "",
     password: "",
   });
+
+  console.log(form)
 
   // atualiza o estado do form
   const handleChange = e => {
@@ -35,21 +37,7 @@ function Login() {
   };
 
   // envia os dados para o backend
-  const handleSubmit = async e => {
-    try {
-      const response = await fetch("http://localhost:3001/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ form }),
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  
 
   return (
     <div className='container'>
@@ -58,14 +46,13 @@ function Login() {
         className='login'
         onSubmit={e => {
           e.preventDefault();
-          handleSubmit();
         }}>
         <h1>Login</h1>
         <input
           type='text'
-          placeholder='Username'
-          name='username'
-          value={form.username}
+          placeholder='Email'
+          name='email'
+          value={form.email}
           onChange={e => setForm(e.target.value)}
           onBlur={e => handleChange(e)}
         />
