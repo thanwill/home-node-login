@@ -1,52 +1,105 @@
 const jwt = require('jsonwebtoken');
-require('dotenv');
-const users = require('./data');
+require('dotenv').config();
 
-async function autentication(req){
-    const username = req.username;
-    const password = req.password;
-    // percorre o array de usuários e verifica se o usuário e a senha estão corretos
-    const usuario = users.find(user => user.username === username && user.password === password);
-    let user = {};
-    if(usuario){
-        
+const LocalStorage = require('node-localstorage').LocalStorage;
+const localStorage = new LocalStorage('./scratch'); // 
 
+async function list() {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    return users.map(u => omitPassword(u));
+}
+
+async function create(newUser) {
+
+    const nome = newUser.nome.toString();
+    const email = newUser.email.toString();
+    const senha = newUser.senha.toString();
+    const nascimento = newUser.nascimento.toString();
+
+    // Verifica se o usuário já existe
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users.find(u => u.email === email);
+
+    if (user) {
+        console.log(`Usuário já existe: ${JSON.stringify(user.nome)}`);
+        return user;
+    } else {
+        // Cria um novo usuário
+        const newUser = {
+            id: users.length + 1,
+            nome,
+            email,
+            senha,
+            nascimento,
+            createdDate: new Date(),
+            modifiedDate: new Date()
+        };
+
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        console.log(`Usuário ${newUser.nome} criado com sucesso!`)
+        return list();
+    }
+}
+
+function omitPassword(user) {
+    const {
+        password,
+        ...userWithoutPassword
+    } = user;
+    return userWithoutPassword;
+}
+
+async function deleteById(id) {
+    let users = JSON.parse(localStorage.getItem('users'));
+    users = users.filter(u => u.id !== id);
+    localStorage.setItem('users', JSON.stringify(users));
+    return list();
+}
+
+async function autentication(newUser) {
+
+    const {
+        email,
+        senha
+    } = newUser;
+
+    // Verifica se o usuário existe
+    const users = JSON.parse(localStorage.getItem('users'));
+    const user = users.find(u => u.email === email && u.senha === senha);
+
+    if (user === undefined) {
+        console.log(`Usuário não encontrado`);
+        return {
+            auth: false,
+            token: null
+        };
+    } else {
         const id = user.id;
-        const token = jwt.sign({id},process.env.SECRET, {
-            expiresIn:300
-        }
-        );
-        user.auth = true;
-        user.token = token;
+        const token = jwt.sign({
+            id
+        }, process.env.SECRET, {
+            expiresIn: 300
+        });
+
+        return {
+            id: id,
+            auth: true,
+            token: token
+        };
     }
-    else{
-        user.auth = false;
-        user.token = '';
-    }
-    return user;
+
 }
 
-//Desconecta o usuário
-async function logout(user){
-    user.auth = false;
-    user.token = null;
-    return user;
-}
-
-//Verifica o token
-async function verifyToken_(req, res, next){
-    const token = req.headers['x-access-token'];
-    if(!token) return res.status(401).json({auht:false, message:'Token not provided'});
-    jwt.verify(token,process.env.SECRET, (err) => {
-        if(err) {
-            return res.status(401).json({auth:false, message:'Faild to authenticate token'});
-        }
-        next();
-    });
+async function deleteAll() {
+    localStorage.clear();
+    return list();
 }
 
 module.exports = {
-    autentication, 
-    logout,
-    verifyToken_
-  };
+    autentication,
+    create,
+    list,
+    deleteById,
+    deleteAll
+};
