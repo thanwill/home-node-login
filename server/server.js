@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const sequelize = require('./data/db');
 const auth = require('./controllers/autentication');
 const Users = require('./controllers/users');
 const port = 3001;
@@ -11,15 +10,16 @@ app.use(express.json()); // usado para converter o corpo da solicitação em JSO
 app.use(cors()); // usado para permitir que o servidor seja acessado por outros domínios
 app.use(bodyPerser.json());
 
-// sincronizar meu banco de dados 
-try{
-    sequelize.sync();
-    console.log('Banco de dados sincronizado com sucesso!');
-
-} catch(err){
-    console.error('Não foi possível sincronizar o banco de dados:', err);
-}
-
+(async () => {
+    const database = require('./models/database');
+    try {
+        await database.sync();
+        const User = require('./models/UserModel');
+        console.log('Conectado ao banco de dados com sucesso!');
+    } catch (err) {
+        console.error('Não foi possível conectar ao banco de dados:', err);
+    }
+})();
 
 app.get('/', (req, res) => {
     return res.json({
@@ -70,6 +70,9 @@ app.post('/cadastrar', async (req, res) => {
             confirmaSenha,
             nascimento
         });
+
+        await user.save();
+        
 
         return res.json(user);
     } catch (err) {
