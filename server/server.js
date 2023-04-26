@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const auth = require('./auth');
+const auth = require('./controllers/autentication');
+const Users = require('./controllers/users');
 const port = 3001;
 const app = express();
 const bodyPerser = require('body-parser');
@@ -30,10 +31,10 @@ app.post('/teste', (req, res) => {
 
 app.get('/listar', async (req, res) => {
     try {
-        const users = await auth.list();
-        res.setHeader('Content-Type', 'application/json'); 
-        res.status(200).send(JSON.stringify(users, null, 2)); 
-    }catch (err) {
+        const users = await Users.getAllUsers();
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).send(JSON.stringify(users, null, 2));
+    } catch (err) {
         console.error(err);
         res.status(500).send(`${err}`);
     }
@@ -47,18 +48,20 @@ app.post('/cadastrar', async (req, res) => {
             nome,
             email,
             senha,
+            confirmaSenha,
             nascimento
         } = req.body;
-    
-        const user = await auth.create({
+
+        const user = new Users({
             nome,
             email,
             senha,
+            confirmaSenha,
             nascimento
         });
-    
+
         return res.json(user);
-    }catch (err) {
+    } catch (err) {
         console.error(err);
         res.status(500).send(`${err}`);
     }
