@@ -11,35 +11,55 @@ async function list() {
 
 async function create(newUser) {
 
+
+    const users = JSON.parse(localStorage.getItem('users')) || []; // se não existir, cria um array vazio
+
     const nome = newUser.nome.toString();
     const email = newUser.email.toString();
     const senha = newUser.senha.toString();
     const nascimento = newUser.nascimento.toString();
 
-    // Verifica se o usuário já existe
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const user = users.find(u => u.email === email);
+    const regexMail = `^[a-z0-9.]+@[a-z0-9]+/.[a-z]+/.([a-z]+)?$`; // 
 
-    if (user) {
-        console.log(`Usuário já existe: ${JSON.stringify(user.nome)}`);
-        return user;
-    } else {
-        // Cria um novo usuário
-        const newUser = {
-            id: users.length + 1,
-            nome,
-            email,
-            senha,
-            nascimento,
-            createdDate: new Date(),
-            modifiedDate: new Date()
+    // const checkSenha = '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})';
+    // const checkNome = '^[a-zA-Z ]{2,30}$';
+
+
+    try {
+
+        if (email.match(regexMail)) {
+            throw new Error('Email inválido');
+        }
+        // Verifica se o usuário já existe
+        const user = users.find(u => u.email === email);
+        if (user) {
+            throw new Error('Usuário já existe');
+        } else {
+            // Cria um novo usuário
+            const newUser = {
+                id: users.length + 1,
+                nome,
+                email,
+                senha,
+                nascimento,
+                createdDate: new Date(),
+                modifiedDate: new Date()
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            console.log(`Usuário ${newUser.nome} criado com sucesso!`)
+            return omitPassword(newUser);
+        }
+
+    } catch (err) {
+        console.error(err);
+        return {
+            auth: false,
+            token: null
         };
-
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        console.log(`Usuário ${newUser.nome} criado com sucesso!`)
-        return list();
     }
+
 }
 
 function omitPassword(user) {

@@ -29,28 +29,39 @@ app.post('/teste', (req, res) => {
 })
 
 app.get('/listar', async (req, res) => {
-    const users = await auth.list();
-    return res.json(users);
+    try {
+        const users = await auth.list();
+        res.setHeader('Content-Type', 'application/json'); 
+        res.status(200).send(JSON.stringify(users, null, 2)); 
+    }catch (err) {
+        console.error(err);
+        res.status(500).send(`${err}`);
+    }
 })
 
 
 app.post('/cadastrar', async (req, res) => {
 
-    const {
-        nome,
-        email,
-        senha,
-        nascimento
-    } = req.body;
-
-    const user = await auth.create({
-        nome,
-        email,
-        senha,
-        nascimento
-    });
-
-    return res.json(user);
+    try {
+        const {
+            nome,
+            email,
+            senha,
+            nascimento
+        } = req.body;
+    
+        const user = await auth.create({
+            nome,
+            email,
+            senha,
+            nascimento
+        });
+    
+        return res.json(user);
+    }catch (err) {
+        console.error(err);
+        res.status(500).send(`${err}`);
+    }
 
 })
 
