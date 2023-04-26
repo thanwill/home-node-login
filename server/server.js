@@ -22,7 +22,6 @@ app.use(bodyPerser.json());
 
 app.use('/', crud);
 
-
 app.listen(port, () => {
     console.log(`O aplicativo está rodando em http://localhost:${port}`);
 });

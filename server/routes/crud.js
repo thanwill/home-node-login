@@ -4,9 +4,7 @@ const Users = require('../controllers/users');
 const auth = require('../controllers/autentication');
 
 router.get('/', (req, res) => {
-  return res.json({
-      message: 'Olá mundo!'
-  });
+  return res.send('<h1>Olá, mundo!</h1>');
 });
 
 router.post('/teste', (req, res) => {
@@ -68,12 +66,12 @@ router.post('/login', async (req, res) => {
 
   const {
       email,
-      senha
+      password
   } = req.body;
 
   const user = await auth.autentication({
       email,
-      senha
+      password
   });
 
   return res.json(user);
