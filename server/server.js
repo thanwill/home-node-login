@@ -3,7 +3,7 @@ const cors = require('cors');
 const port = 3001;
 const app = express();
 const bodyPerser = require('body-parser');
-const crud = require('./routes/crud');
+const crud = require('./routes/CrudRouter');
 app.use(express.json()); // usado para converter o corpo da solicitação em JSON
 app.use(cors()); // usado para permitir que o servidor seja acessado por outros domínios
 app.use(bodyPerser.json());
@@ -12,6 +12,9 @@ app.use(bodyPerser.json());
 (async () => {
     const database = require('./models/database');
     try {
+        
+        const Users = require('./models/UserModel');
+        const Locality = require('./models/LocalityModel');
         await database.sync();
         console.log('Conectado ao banco de dados com sucesso!');
     } catch (err) {
