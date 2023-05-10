@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Users, Administrador, Cliente } = require('../controllers/users');
+const { Usuario, Administrador } = require('../controllers/users');
 const auth = require('../controllers/autentication');
 
 router.get('/', (req, res) => {
@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 
 router.get('/listar', async (req, res) => {
   try {
-    const users = await Users.getAllUsers();
+    const users = await Usuario.getAllUsers();
     res.setHeader('Content-Type', 'routerlication/json');
     res.status(200).send(JSON.stringify(users, null, 2));
   } catch (err) {
@@ -19,33 +19,15 @@ router.get('/listar', async (req, res) => {
   }
 })
 
-
 router.post('/cadastrar', async (req, res) => {
 
-  try {
-    const {
-      nome,
-      email,
-      senha,
-      confirmaSenha,
-      nascimento
-    } = req.body;
-
-    const user = new Users({
-      nome,
-      email,
-      senha,
-      confirmaSenha,
-      nascimento
-    });
-
-    await user.save();
-
-
+  try{
+    console.log(req.body);
+    const user = await Usuario.save(req.body);
     return res.json(user);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send(`${err}`);
+
+  }catch(err){
+    return res.status(500).send(`${err}`);
   }
 
 })
@@ -68,7 +50,7 @@ router.post('/login', async (req, res) => {
 router.get('/listar/:id', async (req, res) => {
   const id = req.params.id;
   try {
-    const user = await Users.getUserById(id);
+    const user = await Usuario.getUserById(id);
     return res.json(user);
   } catch (err) {
     console.error(err);
@@ -80,8 +62,9 @@ router.get('/listar/:id', async (req, res) => {
 router.delete('/deletar/:id', async (req, res) => {
   const id = req.params.id;
   try {
-    const user = await Administrador.deleteUser(id);
-    return res.json(user);
+    await Administrador.deletarUsuario(id);
+    // lança uma resposta de confirmação
+    return res.json("Usuário deletado com sucesso!");
   } catch (err) {
     console.error(err);
     return res.status(500).send(`${err}`);

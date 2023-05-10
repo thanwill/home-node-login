@@ -1,4 +1,4 @@
-import { Locality } from './locality.js';
+import { Address } from './address.js';
 
 class Movements {
 
@@ -25,27 +25,13 @@ class Movements {
 
 class Inventory {
 
-    constructor(id, name, description, quantity, localidade, createdDate, modifiedDate) {
+    constructor(id, name, description, quantity, localidade , createdDate, modifiedDate) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
 
-        this.localidade = [
-            new Locality(
-                localidade.id,
-                localidade.street,
-                localidade.number,
-                localidade.complement,
-                localidade.neighborhood,
-                localidade.city,
-                localidade.state,
-                localidade.country,
-                localidade.zip_code,
-                localidade.createdDate,
-                localidade.modifiedDate
-            )            
-        ]
+        this.localidade = new Address();
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }

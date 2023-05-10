@@ -2,7 +2,6 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 const database = require('./database');
 
-
 const User = database.define('User', {
   id: {
     type: DataTypes.UUID,
@@ -30,39 +29,25 @@ const User = database.define('User', {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: Sequelize.NOW,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: Sequelize.NOW,
-  },
   cpf: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
   },
   type: {
-    type: DataTypes.JSON,
-    allowNull: false,
-  },
-  endereco: {
-    type: DataTypes.JSON,
-    allowNull: false,
-  },
-  localidade_id: {
-    type: DataTypes.UUID,
+    type: DataTypes.INTEGER,
     allowNull: false,
   }
+}, 
+{
+  tableName : 'usuarios',
+  timestamps: false
 
 });
 
-User.hastoMany('Locality', { foreignKey: 'user_id', as: 'locality' }); // um usuario tem muitos enderecos
-
-// comando para criar migration atualizadda com o cpf, type e endereco
-// npx sequelize migration:generate --name add-cpf-type-endereco-to-users
-
 module.exports = User;
+
+// sequelize-auto-migrations --db <url do banco de dados> --models-path <caminho dos modelos> --migrations-path <caminho das migrations>
+
+// npx sequelize-auto-migrations --db /usr/local/mysql/data/ --models-path server/models --migrations-path server/migrations
+

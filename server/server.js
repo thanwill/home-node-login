@@ -13,9 +13,7 @@ app.use(bodyPerser.json());
     const database = require('./models/database');
     try {
         
-        const Users = require('./models/UserModel');
-        const Locality = require('./models/LocalityModel');
-        await database.sync();
+        await database.sync();        
         console.log('Conectado ao banco de dados com sucesso!');
     } catch (err) {
         console.error('Não foi possível conectar ao banco de dados:', err);

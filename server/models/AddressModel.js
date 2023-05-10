@@ -2,63 +2,62 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 const database = require('./database');
 
-const Locality = database.define('Locality', {
+const Address = database.define('Address', {
     id: {
         type: DataTypes.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
     },
-    street: {
+    rua: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    number: {
+    numero: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    complement: {
+    complemento: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    neighborhood: {
+    bairro: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    city: {
+    cidade: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    state: {
+    estado: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    country: {
+    pais: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    zip_code: {
+    cep: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW,
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW,
-    }, 
-    user_id: {
+    // foreign key com a tabela de usuários em casdade de delete do usuário
+    userId: {
         type: DataTypes.UUID,
         allowNull: false,
-    }    
+        references: {
+            model: 'usuarios',
+            key: 'id'
+        }
+    }
+
+}, {
+    tableName: 'endereco',
+    timestamps: false
+
 });
 
-Locality.belongsTo('User', { foreignKey: 'user_id', as: 'user' }); // um endereco pertence a um usuario
 
-// cóigo para criar migration com os dados atualizados do endereco do usuario
-// npx sequelize-cli migration:generate --name update-locality
+// npx sequelize-cli migration:generate --name update-address
+// npx sequelize-cli db:migrate
 
-module.exports = Locality;
+module.exports = Address;
