@@ -2,48 +2,62 @@ require('dotenv').config();
 require('../models/database');
 const jwt = require('jsonwebtoken');
 const User = require('../models/UserModel');
+const bcrypt = require('bcrypt');
 
-async function autentication(newUser) {
+async function autentication(usuario) {
+    try {
+        const {
+            email,
+            senha
+        } = usuario;
 
-    const {
-        email,
-        password
-    } = newUser;
-
-    // verifica se o usuário existe
-
-    const user = await User.findOne({
-        where: {
-            email: email,
-            password: password
-        }
-    });
-
-    try{
-        if (!user) {
-            throw new Error('Usuário não encontrado!');           
-        }
-
-        const id = user.id;
-        const token = jwt.sign({
-            id
-        }, process.env.JWT_SECRET, {
-            expiresIn: 300 // expires in 5min
+        const user = await User.findOne({
+            where: {
+                email
+            }
         });
 
-        return {
-            auth: true,
-            token: token
-        };
+        // lança um erro se o email não estiver cadastrado
+        if (!user) {
+            console.log('Email não cadastrado!');
+        } else {
+            bcrypt.compare(senha, user.senha, function (err, result) {
+                if (err) {
+                    throw err;
+                } else if (result === true) {
+                    console.log('Senha correta!');
+                    return true;
+                } else {
+                    console.log('Senha incorreta!');
+                    return false;
+                }
+            });
+            const confirmacao = await bcrypt.compare(senha, user.senha);
+            if (confirmacao) {
+                const id = user.id;
+                const token = jwt.sign({
+                    id
+                }, process.env.JWT_SECRET, {
+                    expiresIn: 300 // expires in 5min
+                });
+                return {
+                    auth: true,
+                    token: token
+                };
 
-    }catch(err){
-        return {
-            auth: false,
-            message: err.message
-        };
+            } else {
+                return {
+                    auth: false,
+                    message: `Falha ao autenticar o usuário.`
+                }
+            }
+
+        }
+    } catch (err) {
+        throw err;
     }
-
 }
+
 
 async function verifyJWT(req, res, next) {
 

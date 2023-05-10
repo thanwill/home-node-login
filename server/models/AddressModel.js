@@ -4,9 +4,11 @@ const database = require('./database');
 
 const Address = database.define('Address', {
     id: {
-        type: DataTypes.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        type: DataTypes.INTEGER,
+        defaultValue: Sequelize.INTEGER,
         primaryKey: true,
+        allowNull: false,
+        autoIncrement: true
     },
     rua: {
         type: DataTypes.STRING,
@@ -40,22 +42,26 @@ const Address = database.define('Address', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    // foreign key com a tabela de usuários em casdade de delete do usuário
-    userId: {
-        type: DataTypes.UUID,
+    // fk de usuario
+    usuario_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: 'usuarios',
             key: 'id'
         }
-    }
 
+    }
 }, {
     tableName: 'endereco',
-    timestamps: false
-
+    timestamps: true, 
+    indexes: [
+        {
+            unique: true,
+            fields: ['usuario_id']
+        }
+    ]
 });
-
 
 // npx sequelize-cli migration:generate --name update-address
 // npx sequelize-cli db:migrate

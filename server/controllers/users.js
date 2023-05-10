@@ -1,29 +1,28 @@
+const bcrypt = require('bcrypt');
 const User = require('../models/UserModel');
-const Address = require('../models/AddressModel');
-
-const {
-    v4: uuidv4
-} = require('uuid');
 
 class Usuario {
 
-    constructor(name, email, password, cpassword, birthday, cpf) {
-        this.name = name;
+    constructor(nome, email, senha, csenha, nascimento, cpf) {
+        this.id = parseInt();
+        this.nome = nome;
         this.email = email;
-        this.password = password;
-        this.cpassword = cpassword;
-        this.birthday = birthday;
+        this.senha = senha;
+        this.csenha = csenha;
+        this.nascimento = nascimento;
         this.cpf = cpf;
-        this.type = 1;
-
     }
 
     static async save(user) {
         try {
 
-            // trata a data antes de mandar para o banco de dados 
-            const birthday = new Date(user.birthday).toLocaleDateString("en-CA");
-            console.log(birthday);
+            const birthday = new Date(user.nascimento);
+            const formattedBirthday = birthday.toLocaleDateString('pt-BR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).split('/').reverse().join('-');
+            user.nascimento = formattedBirthday;
 
             // verifica se o email já está cadastrado
             const userExists = await User.findOne({
@@ -32,53 +31,86 @@ class Usuario {
                 }
             });
 
-            if (userExists) {
-                throw new Error('Email já cadastrado');
-            }
-
             // verifica se o cpf já está cadastrado
-
             const cpfExists = await User.findOne({
                 where: {
                     cpf: user.cpf
                 }
             });
 
+            if (userExists) {
+                throw new Error('Email já cadastrado');
+            } 
             if (cpfExists) {
                 throw new Error('CPF já cadastrado');
-            }
-
-            // verifica se a senha e a confirmação de senha são iguais
-
-            if (user.password !== user.cpassword) {
+            } 
+            
+            if (user.senha !== user.csenha) {
                 throw new Error('As senhas não são iguais');
             }
 
-            // cria o usuario no banco de dados
+            // cria uma hash para a senha
+            const saltRounds = 10;
+            const hash = await bcrypt.hash(user.senha, saltRounds);
 
             const newUser = await User.create({
-                id: uuidv4(),
-                name: user.name,
+                id: parseInt(),
+                nome: user.nome,
                 email: user.email,
-                password: user.password,
-                birthday: birthday,
+                senha: hash,
+                nascimento: user.nascimento,
                 cpf: user.cpf,
-                type: user.type
+                tipo: 1
             });
 
-            return newUser;
-
+            return newUser; // retorna o novo usuario
 
         } catch (err) {
-            console.error(err);
             throw err; // lança o erro para quem chamou a função
-          }
-          
+        }
     }
 
     static async getAllUsers() {
-        const users = User.findAll();
-        return users;
+        try {
+            const users = await User.findAll();
+            return users;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    // funçao para recuperar senha por email
+    static async recoverPassword(email) {
+
+        // verifica se o email já está cadastrado
+
+        const userExists = await User.findOne({
+            where: {
+                email: email
+            }
+        });
+
+        if (!userExists) {
+            throw new Error('O email não está cadastrado!');
+        }
+
+        try {
+
+            const newPassword = Math.random().toString(36).slice(-8);
+            const saltRounds = 10;
+            const hash = await bcrypt.hash(newPassword, saltRounds);
+            await User.update({
+                senha: hash
+            }, {
+                where: {
+                    email: email
+                }
+            });
+            return newPassword;
+
+        } catch (err) {
+            throw err;
+        }
     }
 
     static async getUserById(id) {
@@ -117,20 +149,7 @@ class Usuario {
             });
 
         } catch (err) {
-            console.error(err);
-            return err;
-        }
-    }
-
-    static async createAddress(endereco) {
-        try {
-            const address = await Address.create({
-                endereco: endereco
-            });
-            return address;
-        } catch (err) {
-            console.error(err);
-            return err;
+            throw err;
         }
     }
 

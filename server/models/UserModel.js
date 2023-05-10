@@ -4,11 +4,13 @@ const database = require('./database');
 
 const User = database.define('User', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: Sequelize.UUIDV4,
+    type: DataTypes.INTEGER,
+    defaultValue: Sequelize.INTEGER,
     primaryKey: true,
+    allowNull: false,
+    autoIncrement: true,
   },
-  name: {
+  nome: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -17,15 +19,11 @@ const User = database.define('User', {
     allowNull: false,
     unique: true,
   },
-  password: {
+  senha: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  cpassword: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  birthday: {
+  nascimento: {
     type: DataTypes.DATE,
     allowNull: false,
   },
@@ -34,20 +32,30 @@ const User = database.define('User', {
     allowNull: false,
     unique: true,
   },
-  type: {
+  tipo: {
     type: DataTypes.INTEGER,
     allowNull: false,
   }
 }, 
 {
   tableName : 'usuarios',
-  timestamps: false
-
+  timestamps: true,
+  indexes : [
+    {
+      unique: true,
+      fields: ['email']
+    },
+    {
+      unique: true,
+      fields: ['cpf']
+    }
+  ]
 });
 
 module.exports = User;
 
-// sequelize-auto-migrations --db <url do banco de dados> --models-path <caminho dos modelos> --migrations-path <caminho das migrations>
-
-// npx sequelize-auto-migrations --db /usr/local/mysql/data/ --models-path server/models --migrations-path server/migrations
+// cria uma migration
+// npx sequelize migration:create --name=create_users
+// executa a migration
+// npx sequelize db:migrate
 

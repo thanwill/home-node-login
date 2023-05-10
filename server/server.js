@@ -11,8 +11,7 @@ app.use(bodyPerser.json());
 // sincronizacao com o banco de dados
 (async () => {
     const database = require('./models/database');
-    try {
-        
+    try {        
         await database.sync();        
         console.log('Conectado ao banco de dados com sucesso!');
     } catch (err) {

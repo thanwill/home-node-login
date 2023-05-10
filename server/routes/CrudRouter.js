@@ -36,12 +36,12 @@ router.post('/login', async (req, res) => {
 
   const {
     email,
-    password
+    senha
   } = req.body;
 
   const user = await auth.autentication({
     email,
-    password
+    senha
   });
 
   return res.json(user);
@@ -52,6 +52,23 @@ router.get('/listar/:id', async (req, res) => {
   try {
     const user = await Usuario.getUserById(id);
     return res.json(user);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send(`${err}`);
+  }
+
+});
+
+// recuperar senha 
+router.post('/recuperar-senha', async (req, res) => {
+
+  const {
+    email
+  } = req.body;
+
+  try {
+    const newPassword = await Usuario.recoverPassword(email);
+    return res.json(newPassword);
   } catch (err) {
     console.error(err);
     return res.status(500).send(`${err}`);
