@@ -17,22 +17,10 @@ const Produtos = database.define('Produtos', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    preco: {
+    preco_unitario: {
         type: DataTypes.FLOAT,
         allowNull: false,
-    },
-    imagem: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    categoria: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    subcategoria: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
+    }
 }, {
     tableName: 'produtos',
     timestamps: true,

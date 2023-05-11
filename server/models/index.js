@@ -5,7 +5,6 @@ const {
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
-const Admin = require('../controllers/administrador');
 const basename = path.basename(__filename);
 // cria uma variável de ambiente para o ambiente de desenvolvimento
 const env = process.env.NODE_ENV || 'development'; 

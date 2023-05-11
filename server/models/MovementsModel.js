@@ -13,27 +13,38 @@ const Movimentos = database.define('Movimentos', {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    // tipo de movimentação ENUM (entrada, saída)
     tipo: {
       type: DataTypes.ENUM('entrada', 'saida'),
       allowNull: false
     },
+    // documento suporte da movimentação
+    documento: {
+      type: DataTypes.ENUM('nota fiscal','ordem de serviço'),
+      allowNull: false
+    },
+    subtipo : {
+      type: DataTypes.ENUM('compra', 'venda', 'transferencia', 'producao', 'simples transferência'),
+      allowNull: false
+    },
+
     // FK referenciando a tabela Estoque
     estoque_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Estoque',
+        model: 'depositos',
         key: 'id'
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
-    }, 
+    },
     // FK referenciando a tabela Produtos
     produto_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Produtos',
+            model: 'depositos',
             key: 'id'
         },
         onUpdate: 'CASCADE',

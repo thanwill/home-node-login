@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 const express = require('express');
 const cors = require('cors');
-const port = 3001;
 const app = express();
+const port = 3001;
 const bodyPerser = require('body-parser');
 const crud = require('./routes/CrudRouter');
 app.use(express.json()); // usado para converter o corpo da solicitação em JSON
@@ -11,8 +12,14 @@ app.use(bodyPerser.json());
 // sincronizacao com o banco de dados
 (async () => {
     const database = require('./models/database');
-    try {        
-        await database.sync();        
+    const Produtos = require('./models/ProductModel');
+    const Movimentos = require('./models/MovementsModel');
+    const Endereco = require('./models/AddressModel');
+    const Usuarios = require('./models/UserModel');
+    const Depositos = require('./models/DepositModel');
+
+    try {
+        await database.sync();
         console.log('Conectado ao banco de dados com sucesso!');
     } catch (err) {
         console.error('Não foi possível conectar ao banco de dados:', err);

@@ -1,4 +1,4 @@
-import { Address } from './address.js';
+import { Address } from './enderecos.js';
 
 class Movements {
 
@@ -30,7 +30,6 @@ class Inventory {
         this.name = name;
         this.description = description;
         this.quantity = quantity;
-
         this.localidade = new Address();
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;

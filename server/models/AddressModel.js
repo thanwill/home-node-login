@@ -1,5 +1,4 @@
 const { Sequelize, DataTypes } = require('sequelize');
-
 const database = require('./database');
 
 const Address = database.define('Address', {

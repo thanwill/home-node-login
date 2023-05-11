@@ -1,6 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const database = require('./database');
-
 const Depositos = database.define('Depositos', {
     id: {
         type: DataTypes.INTEGER,
@@ -17,7 +16,7 @@ const Depositos = database.define('Depositos', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Enderecos',
+            model: 'endereco',
             key: 'id'
         },
         onUpdate: 'CASCADE',
