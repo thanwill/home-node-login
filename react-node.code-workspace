@@ -1,0 +1,39 @@
+{
+	"folders": [
+	  {
+		"path": "."
+	  }
+	],
+	"settings": {
+	  "editor.tabSize": 2,
+	  "eslint.validate": [
+		"javascriptreact",
+	  ],
+	  "files.associations": {
+		"*.js": "javascriptreact",
+		"*.jsx": "javascriptreact"
+	  },
+	  "editor.formatOnSave": true,
+	  "prettier.eslintIntegration": true,
+	  "javascript.updateImportsOnFileMove.enabled": "always",
+	  "javascript.suggest.autoImports": true,
+	  "editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	  },
+	  "files.autoSave": "onFocusChange",
+	  "mysql.host": "localhost",
+	  "mysql.port": 3306,
+	  "mysql.user": "root",
+	  "mysql.password": "atzmkl712",
+	  "mysql.database": "erp",
+	  "mysql.ssl": false,
+	  "sequelize.autoMigrate": true
+	},
+	"extensions": {
+	  "recommendations": [
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode"
+	  ]
+	}
+  }
+  
