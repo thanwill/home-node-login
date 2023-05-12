@@ -1,30 +1,90 @@
-// importa o pacote do boostrap para criar um formulario de login
 import { Form, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { login } from "../../services/auth";
+import { useState } from "react";
 import "./styles.css";
 
 export default function FormLogin() {
+  const [user, setUser] = useState({
+    email: "",
+    senha: "",
+  });
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  // funçao para pegar os dados do input
+  const handleInputChange = event => {
+    const { name, value } = event.target;
+    setUser({ ...user, [name]: value });
+  };
+
+  // funçao para enviar os dados para o backend
+  const handleSubmit = async event => {
+    event.preventDefault();
+    alert("teste");
+  };
+
   return (
-    <div className='formulario mt-5'>
-      <Form>
-        <Form.Group controlId='formBasicEmail'>
-          <Form.Label>Email</Form.Label>
-          <Form.Control type='email' placeholder='Digite seu email' />
-        </Form.Group>
+    <div className='container'>
+      <form>
+        {error && (
+          <div className='alert alert-danger'>
+            {error}
+            <button
+              type='button'
+              className='btn-close'
+              aria-label='Close'
+              onClick={() => setError("")}></button>
+          </div>
+        )}
+        {success && (
+          <div className='alert alert-success'>
+            {success}
+            <button
+              type='button'
+              className='btn-close'
+              aria-label='Close'
+              onClick={() => setSuccess("")}></button>
+          </div>
+        )}
 
-        <Form.Group controlId='formBasicPassword'>
-          <Form.Label>Senha</Form.Label>
-          <Form.Control type='password' placeholder='Digite sua senha' />
-        </Form.Group>
+        <div className='mb-3'>
+          <label htmlFor='email' className='form-label'>
+            Email
+          </label>
+          <input
+            type='email'
+            className='form-control'
+            id='email'
+            name='email'
+            value={user.email}
+            onChange={handleInputChange}
+          />
+        </div>
 
-        <Button variant='primary' type='submit'>
-          Entrar
-        </Button>
+        <div className='mb-3'>
+          <label htmlFor='senha' className='form-label'>
+            Senha
+          </label>
+          <input
+            type='password'
+            className='form-control'
+            id='senha'
+            name='senha'
+            value={user.senha}
+            onChange={handleInputChange}
+          />
+        </div>
 
-        <Link to='/register' className='btn btn-link'>
-          Cadastrar
-        </Link>
-      </Form>
+        <div className='mt-5'>
+          <button
+            type='submit'
+            className='btn btn-primary'
+            onClick={handleSubmit}>
+            Entrar
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

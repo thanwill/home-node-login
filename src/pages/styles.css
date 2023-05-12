@@ -1,0 +1,4 @@
+/* Alinha os botoes de tab no centro*/
+.card-menu {
+  justify-content: center;
+}

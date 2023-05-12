@@ -1,11 +1,13 @@
 import { Routes, Route } from "react-router-dom";
-import Login from "../pages/login";
 import Erro from "../pages/erro";
+import Cadastro from "../pages/autenticar";
+import Usuarios from "../pages/usuarios";
 
 export default function ConfigRoutes() {
   return (
     <Routes>
-      <Route path='/' element={<Login />} />
+      <Route path='/' element={<Cadastro />} />
+      <Route path='/usuarios' element={<Usuarios />} />
       <Route path='*' element={<Erro />} />
     </Routes>
   );
