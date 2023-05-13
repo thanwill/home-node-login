@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Erro from "../pages/erro";
-import Cadastro from "../pages/autenticar";
+import Cadastro from "../pages/inicio";
 import Usuarios from "../pages/usuarios";
 
 export default function ConfigRoutes() {

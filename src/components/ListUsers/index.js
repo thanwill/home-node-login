@@ -50,7 +50,15 @@ export default function ListUsers() {
                     </td>
                     <td>
                       <div className='row'>
-                        <div className='col-md-3'>
+                        <div className='col'>
+                          <button className='btn btn-primary'>Editar</button>
+                        </div>
+                        <div className='col'>
+                          <button className='btn btn-success'>
+                            Alterar senha
+                          </button>
+                        </div>
+                        <div className='col'>
                           <button
                             className='btn btn-danger'
                             onClick={() => handleDelete(user.id)}>

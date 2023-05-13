@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { newUser } from "../../services/auth";
+import { getAllUsers } from "../../services/users";
 
 export default function FormSignIn() {
   const [user, setUser] = useState({
@@ -49,62 +50,64 @@ export default function FormSignIn() {
 
   return (
     <div className='container'>
-      <form className=' col-12 mt-5'>
+      <form className='col-12 col-md-4 offset-md-4 mt-5'>
+        <h1 class='h3 mb-3 fw-normal'>Cadastre-se agora!</h1>
         {success && <div className='alert alert-success'>{success}</div>}
 
-        <div className='mb-3'>
-          <label htmlFor='nome' className='form-label'>
-            Nome
-          </label>
+        <div className='form-floating mb-3'>
           <input
             type='text'
             className='form-control'
             id='nome'
             name='nome'
+            placeholder='Nome completo'
             onChange={handleInputChange}
           />
+          <label for='nome'>Nome e sobrenome</label>
         </div>
-        <div className='mb-3'>
-          <label htmlFor='email' className='form-label'>
-            Email
-          </label>
+
+        <div class='form-floating mb-3'>
           <input
             type='email'
             className='form-control'
             id='email'
-            name='email'
+            placeholder='name@example.com'
             onChange={handleInputChange}
           />
+          <label for='email'>E-mail</label>
         </div>
-        <div className='mb-3'>
-          <label htmlFor='senha' className='form-label'>
-            Senha
-          </label>
+
+        <div className='form-floating mb-3'>
           <input
             type='password'
             className='form-control'
             id='senha'
             name='senha'
+            placeholder='Senha'
             onChange={handleInputChange}
           />
-        </div>
-        <div className='mb-3'>
-          <label htmlFor='csenha' className='form-label'>
-            Confirme a senha
+          <label htmlFor='senha' className='form-label'>
+            Senha
           </label>
+        </div>
+        <div className='form-floating mb-3'>
           <input
             type='password'
             className='form-control'
             id='csenha'
             name='csenha'
+            placeholder='Confirme a senha'
             onChange={handleInputChange}
           />
+          <label htmlFor='csenha' className='form-label'>
+            Confirme a senha
+          </label>
         </div>
 
         {/* Input de aniversario/nascimento */}
 
         <div className='mb-3'>
-          <label htmlFor='nascimento' className='form-label'>
+          <label htmlFor='nascimento' className='form-label mb-3'>
             Data de nascimento
           </label>
           <input
@@ -112,21 +115,23 @@ export default function FormSignIn() {
             className='form-control'
             id='nascimento'
             name='nascimento'
+            placeholder={Date.now()}
             onChange={handleInputChange}
           />
         </div>
 
-        <div className='mb-3'>
-          <label htmlFor='cpf' className='form-label'>
-            CPF
-          </label>
+        <div className='form-floating mb-3'>
           <input
             type='text'
             className='form-control'
             id='cpf'
             name='cpf'
+            placeholder='102.103.104-05'
             onChange={handleInputChange}
           />
+          <label htmlFor='cpf' className='form-label'>
+            CPF
+          </label>
         </div>
 
         {

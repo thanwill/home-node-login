@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import FormLogin from "../components/FormLogin";
 import FormSignIn from "../components/FormSignIn";
 import ListUsers from "../components/ListUsers";
@@ -45,6 +46,27 @@ export default function Cadastro() {
               aria-selected='false'>
               Usuários
             </button>
+          </li>
+          <li class='nav-item dropdown'>
+            <a
+              class='nav-link dropdown-toggle'
+              data-bs-toggle='dropdown'
+              href=' '
+              role='button'
+              aria-expanded='false'>
+              Outros
+            </a>
+            <ul class='dropdown-menu'>
+              <Link to='/estoque' className='dropdown-item'>
+                Estoque
+              </Link>
+              <Link to='/produtos' className='dropdown-item'>
+                Produtos
+              </Link>
+              <Link to='/movimentos' className='dropdown-item'>
+                Movimentações
+              </Link>
+            </ul>
           </li>
         </ul>
         <div className='tab-content' id='pills-tabContent'>
