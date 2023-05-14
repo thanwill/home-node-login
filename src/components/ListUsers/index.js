@@ -39,32 +39,24 @@ export default function ListUsers() {
                     <td>{user.nome}</td>
                     <td>
                       {
-                        // exibe o email nesse formato jonat******@gmail.com
-                        user.email.substring(0, 6) +
-                          "***" +
-                          user.email.substring(
-                            user.email.indexOf("@"),
-                            user.email.length
-                          )
+                        // oculta parte do email do usuário
+                        user.email.replace(/^(.{3})(.*)(@.*)$/, "$1...$3")
                       }
                     </td>
                     <td>
-                      <div className='row'>
-                        <div className='col'>
-                          <button className='btn btn-primary'>Editar</button>
-                        </div>
-                        <div className='col'>
-                          <button className='btn btn-success'>
-                            Alterar senha
-                          </button>
-                        </div>
-                        <div className='col'>
-                          <button
-                            className='btn btn-danger'
-                            onClick={() => handleDelete(user.id)}>
-                            Excluir
-                          </button>
-                        </div>
+                      <div
+                        class='btn-group'
+                        role='group'
+                        aria-label='Basic outlined example'>
+                        <button type='button' class='btn btn-outline-primary'>
+                          Editar
+                        </button>
+                        <button type='button' class='btn btn-outline-primary'>
+                          Excluir
+                        </button>
+                        <button type='button' class='btn btn-outline-primary'>
+                          Visualizar
+                        </button>
                       </div>
                     </td>
                   </tr>
