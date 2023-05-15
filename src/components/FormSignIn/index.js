@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { newUser } from "../../services/auth";
 import { getAllUsers } from "../../services/users";
+import { Form } from "react-bootstrap";
 
 export default function FormSignIn() {
   const [user, setUser] = useState({
@@ -12,91 +13,93 @@ export default function FormSignIn() {
     cpf: "",
   });
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
   // funçao para pegar os dados do input
   const handleInputChange = event => {
     const { name, value } = event.target;
     setUser({ ...user, [name]: value });
   };
+  const [validated, setValidated] = useState(false);
 
-  // funçao para enviar os dados para o backend
-  const handleSubmit = async event => {
-    event.preventDefault();
-
-    try {
-      if (user.senha !== user.csenha) {
-        setError("As senhas não são iguais");
-        return;
-      }
-      const response = await newUser(user);
-
-      if (response.success) {
-        setSuccess(response.success);
-      } else {
-        setError(response.error);
-      }
-    } catch (error) {
-      if (error.response) {
-        setError(error.response.data);
-      } else if (error.request) {
-        setError("Não foi possível conectar ao servidor");
-      } else {
-        setError("Ocorreu um erro na requisição");
-      }
+  const handleSubmit = event => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+      console.log(user);
     }
+
+    setValidated(true);
+  };
+
+  const handleCpf = event => {
+    // adiciona mascara de cpf
+    let cpf = event.target.value;
+    cpf = cpf.replace(/\D/g, "");
+    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+    cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    setUser({ ...user, cpf: cpf });
   };
 
   return (
     <div className='container'>
-      <form className='col-12 col-md-4 offset-md-4 mt-5'>
-        <h1 class='h3 mb-3 fw-normal'>Cadastre-se agora!</h1>
-        {success && <div className='alert alert-success'>{success}</div>}
-
-        <div className='form-floating mb-3'>
+      <Form
+        noValidate
+        validated={validated}
+        onSubmit={handleSubmit}
+        className='col-12 col-md-6 offset-md-3 needs-validation'
+        novalidate
+        onClick={handleSubmit}>
+        <h1 class='h3 mb-3 fw-normal mb-5'>Cadastre-se agora!</h1>
+        <div className='form-floating mb-3 has-validation'>
           <input
             type='text'
             className='form-control'
             id='nome'
             name='nome'
             placeholder='Nome completo'
+            pattern='[A-Za-z]{3,} [A-Za-z]{3,}'
+            required
             onChange={handleInputChange}
           />
           <label for='nome'>Nome e sobrenome</label>
         </div>
 
-        <div class='form-floating mb-3'>
+        <div class='form-floating mb-3 has-validation'>
           <input
             type='email'
             className='form-control'
             id='email'
-            placeholder='name@example.com'
+            name='email'
+            placeholder='E-mail'
+            pattern='[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'
             onChange={handleInputChange}
           />
           <label for='email'>E-mail</label>
         </div>
 
-        <div className='form-floating mb-3'>
+        <div className='form-floating mb-3 has-validation'>
           <input
             type='password'
             className='form-control'
             id='senha'
             name='senha'
             placeholder='Senha'
+            pattern='(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'
             onChange={handleInputChange}
           />
           <label htmlFor='senha' className='form-label'>
             Senha
           </label>
         </div>
-        <div className='form-floating mb-3'>
+        <div className='form-floating mb-3 has-validation'>
           <input
             type='password'
             className='form-control'
             id='csenha'
             name='csenha'
             placeholder='Confirme a senha'
+            pattern='(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'
             onChange={handleInputChange}
           />
           <label htmlFor='csenha' className='form-label'>
@@ -106,7 +109,7 @@ export default function FormSignIn() {
 
         {/* Input de aniversario/nascimento */}
 
-        <div className='mb-3'>
+        <div className='mb-3 has-validation'>
           <label htmlFor='nascimento' className='form-label mb-3'>
             Data de nascimento
           </label>
@@ -115,33 +118,30 @@ export default function FormSignIn() {
             className='form-control'
             id='nascimento'
             name='nascimento'
-            placeholder={Date.now()}
+            pattern='\d{2}/\d{2}/\d{4}'
+            placeholder={new Date().toLocaleDateString()}
             onChange={handleInputChange}
           />
         </div>
 
-        <div className='form-floating mb-3'>
+        <div className='form-floating mb-3 has-validation'>
           <input
             type='text'
             className='form-control'
             id='cpf'
             name='cpf'
-            placeholder='102.103.104-05'
-            onChange={handleInputChange}
+            placeholder='CPF'
+            pattern='\d{3}\.\d{3}\.\d{3}-\d{2}'
+            value={user.cpf}
+            onChange={event => {
+              handleInputChange(event);
+              handleCpf(event);
+            }}
           />
           <label htmlFor='cpf' className='form-label'>
             CPF
           </label>
         </div>
-
-        {
-          // mostra a mensagem de erro por 3 segundos
-
-          error &&
-            setTimeout(() => {
-              setError("");
-            }, 3000) && <div className='alert alert-danger'>{error}</div>
-        }
 
         <div className='mt-5'>
           <button
@@ -151,7 +151,7 @@ export default function FormSignIn() {
             Cadastrar
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }
