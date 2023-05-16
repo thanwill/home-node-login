@@ -21,10 +21,20 @@ export default function FormLogin() {
       <Form
         noValidate
         validated={validated}
-        onSubmit={handleSubmit}
         className='col-12 col-md-6 offset-md-3 needs-validation'
-        novalidate
-        onClick={handleSubmit}>
+        onChange={e => {
+          // captura o foco de cada input e valida se o pattern está correto ou não adicionando a classe is-invalid ou is-valid
+
+          if (e.target.value !== "") {
+            if (e.target.validity.valid) {
+              e.target.classList.remove("is-invalid");
+              e.target.classList.add("is-valid");
+            } else {
+              e.target.classList.remove("is-valid");
+              e.target.classList.add("is-invalid");
+            }
+          }
+        }}>
         <h1 className='h3 mb-3 fw-normal mb-5'>
           Faça login! <br />
         </h1>
