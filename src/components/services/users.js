@@ -13,3 +13,8 @@ export const deleteById = async id => {
   const response = await api.delete(`/deletar/${id}`);
   return response.data;
 };
+
+export const createUser = async user => {
+  const response = await api.post("/cadastrar", user);
+  return response.data;
+};

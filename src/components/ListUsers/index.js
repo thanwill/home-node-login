@@ -1,4 +1,4 @@
-import { getAllUsers, deleteById } from "../../services/users";
+import { getAllUsers, deleteById } from "../services/users";
 import { useEffect, useState } from "react";
 
 export default function ListUsers() {

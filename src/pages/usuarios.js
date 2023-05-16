@@ -1,4 +1,4 @@
-import { getAllUsers } from "../services/users";
+import { getAllUsers } from "../components/services/users";
 import { useEffect, useState } from "react";
 
 export default function Usuarios() {

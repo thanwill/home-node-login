@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { newUser } from "../../services/auth";
-import { getAllUsers } from "../../services/users";
+import { newUser } from "../services/auth";
+import { getAllUsers } from "../services/users";
 import { Form } from "react-bootstrap";
 
 export default function FormSignIn() {
@@ -21,11 +21,27 @@ export default function FormSignIn() {
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = event => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
+    event.preventDefault();
+
+    // verifica se os campos estão vazios
+
+    if (
+      user.nome === "" ||
+      user.email === "" ||
+      user.senha === "" ||
+      user.csenha === "" ||
+      user.nascimento === "" ||
+      user.cpf === ""
+    ) {
+      setValidated(false);
+      // o codigo abaixo impede que o formulario seja enviado
       event.stopPropagation();
-      console.log(user);
+      console.log("campos vazios");
+
+      return;
+    } else {
+      newUser(user);
+      setValidated(true);
     }
 
     setValidated(true);
@@ -45,8 +61,6 @@ export default function FormSignIn() {
     <div className='container'>
       <Form
         noValidate
-        validated={validated}
-        onSubmit={handleSubmit}
         className='col-12 col-md-6 offset-md-3 needs-validation'
         novalidate
         onClick={handleSubmit}>
@@ -142,6 +156,16 @@ export default function FormSignIn() {
             CPF
           </label>
         </div>
+
+        {validated ? (
+          <div className='alert alert-success' role='alert'>
+            Usuário cadastrado com sucesso!
+          </div>
+        ) : (
+          <div className='alert alert-danger' role='alert'>
+            Preencha todos os campos!
+          </div>
+        )}
 
         <div className='mt-5'>
           <button

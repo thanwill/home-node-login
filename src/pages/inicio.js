@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import FormLogin from "../components/FormLogin";
-import FormSignIn from "../components/FormSignIn";
 import ListUsers from "../components/ListUsers";
 import "./styles.css";
+import FormSignIn from "../components/FormSignIn/index";
+
 export default function Cadastro() {
   return (
     <>
