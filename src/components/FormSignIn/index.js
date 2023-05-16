@@ -38,7 +38,19 @@ export default function FormSignIn() {
       event.stopPropagation();
       return;
     } else {
-      newUser(user);
+      newUser(user).then(response => {
+        console.log(response.status);
+      });
+
+      setUser({
+        nome: "",
+        email: "",
+        senha: "",
+        csenha: "",
+        nascimento: "",
+        cpf: "",
+      });
+
       setValidated(true);
     }
   };

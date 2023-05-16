@@ -24,7 +24,6 @@ export default function FormLogin() {
         className='col-12 col-md-6 offset-md-3 needs-validation'
         onChange={e => {
           // captura o foco de cada input e valida se o pattern está correto ou não adicionando a classe is-invalid ou is-valid
-
           if (e.target.value !== "") {
             if (e.target.validity.valid) {
               e.target.classList.remove("is-invalid");
