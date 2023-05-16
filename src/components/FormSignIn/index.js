@@ -18,7 +18,7 @@ export default function FormSignIn() {
     const { name, value } = event.target;
     setUser({ ...user, [name]: value });
   };
-  const [validated, setValidated] = useState(false);
+  const [validated, setValidated] = useState(true);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -36,15 +36,11 @@ export default function FormSignIn() {
       setValidated(false);
       // o codigo abaixo impede que o formulario seja enviado
       event.stopPropagation();
-      console.log("campos vazios");
-
       return;
     } else {
       newUser(user);
       setValidated(true);
     }
-
-    setValidated(true);
   };
 
   const handleCpf = event => {
@@ -62,8 +58,20 @@ export default function FormSignIn() {
       <Form
         noValidate
         className='col-12 col-md-6 offset-md-3 needs-validation'
-        novalidate
-        onClick={handleSubmit}>
+        onChange={e => {
+          // captura o foco de cada input e valida se o pattern está correto ou não adicionando a classe is-invalid ou is-valid
+
+          if (e.target.value !== "") {
+            if (e.target.validity.valid) {
+              e.target.classList.remove("is-invalid");
+              e.target.classList.add("is-valid");
+            } else {
+              e.target.classList.remove("is-valid");
+              e.target.classList.add("is-invalid");
+            }
+          }
+        }}
+        novalidate>
         <h1 class='h3 mb-3 fw-normal mb-5'>Cadastre-se agora!</h1>
         <div className='form-floating mb-3 has-validation'>
           <input
@@ -133,7 +141,6 @@ export default function FormSignIn() {
             id='nascimento'
             name='nascimento'
             pattern='\d{2}/\d{2}/\d{4}'
-            placeholder={new Date().toLocaleDateString()}
             onChange={handleInputChange}
           />
         </div>
@@ -157,15 +164,14 @@ export default function FormSignIn() {
           </label>
         </div>
 
-        {validated ? (
-          <div className='alert alert-success' role='alert'>
-            Usuário cadastrado com sucesso!
-          </div>
-        ) : (
-          <div className='alert alert-danger' role='alert'>
-            Preencha todos os campos!
-          </div>
-        )}
+        {
+          // se o formulario não for validado, mostra a mensagem de erro
+          !validated && (
+            <div className='alert alert-danger' role='alert'>
+              Preencha todos os campos!
+            </div>
+          )
+        }
 
         <div className='mt-5'>
           <button
