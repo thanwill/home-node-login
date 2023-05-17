@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 function App() {
   return (
     <div className='App container'>
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <ConfigRoutes />
       </Router>
     </div>
