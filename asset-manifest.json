@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/thanwill/home-node-login/static/css/main.a64fae90.css",
+    "main.js": "/thanwill/home-node-login/static/js/main.2101b0ad.js",
+    "static/js/787.0bca8be2.chunk.js": "/thanwill/home-node-login/static/js/787.0bca8be2.chunk.js",
+    "index.html": "/thanwill/home-node-login/index.html",
+    "main.a64fae90.css.map": "/thanwill/home-node-login/static/css/main.a64fae90.css.map",
+    "main.2101b0ad.js.map": "/thanwill/home-node-login/static/js/main.2101b0ad.js.map",
+    "787.0bca8be2.chunk.js.map": "/thanwill/home-node-login/static/js/787.0bca8be2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a64fae90.css",
+    "static/js/main.2101b0ad.js"
+  ]
+}
