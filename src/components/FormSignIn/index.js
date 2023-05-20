@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { newUser } from "../services/auth";
-import { getAllUsers } from "../services/users";
 import { Form } from "react-bootstrap";
+import TitleText from "../TitleText";
 
-export default function FormSignIn() {
+export default function FormSignIn({ onUserAdd }) {
+  const [validated, setValidated] = useState(true);
   const [user, setUser] = useState({
     nome: "",
     email: "",
@@ -18,13 +19,11 @@ export default function FormSignIn() {
     const { name, value } = event.target;
     setUser({ ...user, [name]: value });
   };
-  const [validated, setValidated] = useState(true);
 
   const handleSubmit = event => {
     event.preventDefault();
 
     // verifica se os campos estão vazios
-
     if (
       user.nome === "" ||
       user.email === "" ||
@@ -41,7 +40,6 @@ export default function FormSignIn() {
       newUser(user).then(response => {
         console.log(response.status);
       });
-
       setUser({
         nome: "",
         email: "",
@@ -50,7 +48,7 @@ export default function FormSignIn() {
         nascimento: "",
         cpf: "",
       });
-
+      onUserAdd(user);
       setValidated(true);
     }
   };
@@ -84,7 +82,7 @@ export default function FormSignIn() {
           }
         }}
         novalidate>
-        <h1 class='h3 mb-3 fw-normal mb-5'>Cadastre-se agora!</h1>
+        <TitleText title='Cadastre-se agora!' />
         <div className='form-floating mb-3 has-validation'>
           <input
             type='text'

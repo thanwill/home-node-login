@@ -3,8 +3,25 @@ import FormLogin from "../components/FormLogin";
 import ListUsers from "../components/ListUsers";
 import "./styles.css";
 import FormSignIn from "../components/FormSignIn/index";
+import { useEffect, useState } from "react";
+import { getAllUsers } from "../components/services/users";
 
 export default function Cadastro() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    // função para carregar os usuarios
+    const loadUsers = async () => {
+      const response = await getAllUsers();
+      setUsers(response);
+    };
+    loadUsers();
+  }, []);
+
+  const handleUserAdd = user => {
+    setUsers([...users, user]);
+  };
+
   return (
     <>
       <div className='container'>
@@ -70,6 +87,7 @@ export default function Cadastro() {
             </ul>
           </li>
         </ul>
+
         <div className='tab-content' id='pills-tabContent'>
           <div
             className='tab-pane fade show active'
@@ -83,14 +101,14 @@ export default function Cadastro() {
             id='pills-profile'
             role='tabpanel'
             aria-labelledby='pills-profile-tab'>
-            <FormSignIn />
+            <FormSignIn onUserAdd={handleUserAdd} />
           </div>
           <div
             className='tab-pane fade'
             id='pills-contact'
             role='tabpanel'
             aria-labelledby='pills-contact-tab'>
-            <ListUsers />
+            <ListUsers usuarios={users} />
           </div>
         </div>
       </div>

@@ -1,6 +1,5 @@
 {
   "name": "ERP",
-  "homepage": "https://github.com/thanwill/home-node-login",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

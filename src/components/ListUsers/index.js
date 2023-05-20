@@ -1,28 +1,19 @@
-import { getAllUsers, deleteById } from "../services/users";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import ModalAction from "../Modal";
+import ModalEdit from "../ModalEdit";
+import TitleText from "../TitleText";
 
-export default function ListUsers() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const loadUsers = async () => {
-      const response = await getAllUsers();
-      setUsers(response);
-    };
-    loadUsers();
-  }, []);
-
-  const handleDelete = async id => {
-    await deleteById(id);
-    const response = await getAllUsers();
-    setUsers(response);
-  };
+export default function ListUsers({ usuarios }) {
+  const [showModal, setShowModal] = useState(false);
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
 
   return (
     <>
       <div className='container'>
         <div className='row'>
           <div className='col-12'>
+            <TitleText title='Lista de Usuários' />
             <table className='table table-striped align-middle'>
               <thead>
                 <tr>
@@ -33,7 +24,7 @@ export default function ListUsers() {
                 </tr>
               </thead>
               <tbody>
-                {users.map(user => (
+                {usuarios.map(user => (
                   <tr key={user.id}>
                     <th scope='row'>{user.id}</th>
                     <td>{user.nome}</td>
@@ -51,7 +42,10 @@ export default function ListUsers() {
                         <button type='button' class='btn btn-outline-primary'>
                           Editar
                         </button>
-                        <button type='button' class='btn btn-outline-primary'>
+                        <button
+                          type='button'
+                          class='btn btn-outline-primary'
+                          onClick={handleShowModal}>
                           Excluir
                         </button>
                         <button type='button' class='btn btn-outline-primary'>
@@ -66,6 +60,13 @@ export default function ListUsers() {
           </div>
         </div>
       </div>
+      <ModalAction
+        show={showModal}
+        handleClose={handleCloseModal}
+        Title={`Excluir usuário`}
+        Body={`Tem certeza que deseja excluir o usuário?`}
+        Footer={"Excluir"}
+      />
     </>
   );
 }
