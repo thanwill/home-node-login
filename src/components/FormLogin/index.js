@@ -11,7 +11,6 @@ export default function FormLogin() {
       event.preventDefault();
       event.stopPropagation();
     }
-
     setValidated(true);
   };
 
@@ -21,7 +20,7 @@ export default function FormLogin() {
       <Form
         noValidate
         validated={validated}
-        className='col-12 col-md-6 offset-md-3 needs-validation'
+        className='col-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4 needs-validation pt-5'
         onChange={e => {
           // captura o foco de cada input e valida se o pattern está correto ou não adicionando a classe is-invalid ou is-valid
           if (e.target.value !== "") {
@@ -60,8 +59,14 @@ export default function FormLogin() {
           />
           <label for='signsenha'>Password</label>
         </div>
-        <Button type='submit'>Sign in</Button>
-        <p className='mt-5 mb-3 text-muted'>© 2017–2021</p>
+        <Button type='submit'>Entrar</Button>
+        {
+          // data atual do sistema
+          <p className='mt-5 mb-3 text-muted'>
+            Feito com <i className='bi bi-heart-fill text-danger'></i> por mim
+            &copy; {new Date().getFullYear()}
+          </p>
+        }
       </Form>
     </>
   );

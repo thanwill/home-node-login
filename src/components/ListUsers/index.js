@@ -12,7 +12,7 @@ export default function ListUsers({ usuarios }) {
     <>
       <div className='container'>
         <div className='row'>
-          <div className='col-12'>
+          <div className='col-12 mt-5'>
             <TitleText title='Lista de Usuários' />
             <table className='table table-striped align-middle'>
               <thead>

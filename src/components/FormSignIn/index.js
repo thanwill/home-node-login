@@ -67,7 +67,7 @@ export default function FormSignIn({ onUserAdd }) {
     <div className='container'>
       <Form
         noValidate
-        className='col-12 col-md-6 offset-md-3 needs-validation'
+        className='col-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4 needs-validation pt-5'
         onChange={e => {
           // captura o foco de cada input e valida se o pattern está correto ou não adicionando a classe is-invalid ou is-valid
 

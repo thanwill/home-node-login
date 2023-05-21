@@ -52,22 +52,19 @@ export default function Header() {
                 </Link>
                 <ul className='dropdown-menu' aria-labelledby='navbarDropdown'>
                   <li>
-                    <Link className='dropdown-item' to='/usuarios'>
-                      Usuários
+                    <Link className='dropdown-item' to='/'>
+                      Início
                     </Link>
                   </li>
                   <li>
                     <Link className='dropdown-item' to='/entrar'>
-                      Login
+                      log out
                     </Link>
                   </li>
                 </ul>
               </li>
             </ul>
-            <span className='navbar-text'>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Voluptatum, nobis?
-            </span>
+            <span className='navbar-text'>Informações do ERP</span>
           </div>
         </div>
       </nav>
