@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import ModalAction from "../Modal";
-import ModalEdit from "../ModalEdit";
 import TitleText from "../TitleText";
 
 export default function ListUsers({ usuarios }) {

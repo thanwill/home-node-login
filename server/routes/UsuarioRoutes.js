@@ -3,10 +3,9 @@ const router = express.Router();
 const { Usuario, Administrador } = require("../controllers/usuarios");
 const auth = require("../controllers/autentication");
 
+// Defina as rotas para o usuário
 router.get("/", (req, res) => {
-  res.send(`
-    <h1>Rodando.</h1>
-  `);
+  res.send("Rota do usuário");
 });
 
 router.get("/listar", async (req, res) => {
@@ -22,7 +21,6 @@ router.get("/listar", async (req, res) => {
 
 router.post("/cadastrar", async (req, res) => {
   try {
-    console.log(req.body);
     const user = await Usuario.save(req.body);
     return res.json(user);
   } catch (err) {
