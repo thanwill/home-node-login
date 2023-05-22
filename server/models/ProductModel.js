@@ -16,10 +16,6 @@ const Produtos = database.define('Produtos', {
     descricao: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    preco_unitario: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
     }
 }, {
     tableName: 'produtos',

@@ -1,31 +1,23 @@
+const Produtos = require("../models/ProductModel");
+
 class Movements {
   constructor(
-    id,
-    type,
-    quantity,
-    price_unitary,
-    products,
-    createdDate,
-    modifiedDate
+    tipo,
+    quantidade,
+    preco_unitario,
+    documento,
+    subtipo,
+    produtos_id,
+    estoque_id
   ) {
-    this.id = id;
-    this.type = {
-      id: type.id,
-      name: type.name,
-      description: type.description,
-    };
-    this.products = [
-      {
-        id: products.id,
-        name: products.name,
-        description: products.description,
-        quantity: products.quantity,
-        price: products.price,
-      },
-    ];
-    this.quantity = quantity;
-    this.createdDate = createdDate;
-    this.modifiedDate = modifiedDate;
+    this.id = parseInt();
+    this.tipo = tipo; // tipo: entrada ou saída
+    this.quantidade = parseInt(quantidade);
+    this.preco_unitario = parseFloat(preco_unitario);
+    this.documento = documento; // documento: nota fiscal ou ordem de serviço
+    this.subtipo = subtipo; // subtipo: compra, venda, devolução, etc
+    this.produtos_id = parseInt(produtos_id);
+    this.estoque_id = parseInt(estoque_id);
   }
 }
 
@@ -50,88 +42,112 @@ class Inventory {
 }
 
 class Products {
-  constructor(nome, descricao, quantidade, preco) {
-    this.id = parseInt();
+  constructor(nome, descricao) {
     this.nome = nome;
     this.descricao = descricao;
-    this.quantidade = quantidade;
-    this.preco = preco;
   }
 
-  static async createProduct(product) {
+  static async validateString(string, min, max) {
     try {
-      const product = await Products.create({
-        name: this.name,
-        description: this.description,
-        quantity: this.quantity,
-        price: this.price,
-      });
-
-      // limita a quantidade de caracteres do nome
-      if (this.name.length > 100) {
+      // se a string for menor que o mínimo
+      if (string.length < min) {
         return {
           status: false,
-          message: "O nome do produto deve ter no máximo 100 caracteres!",
+          message: `O campo deve ter no mínimo ${min} caracteres!`,
         };
       }
 
-      // limita a quantidade de caracteres da descrição
-      if (this.description.length > 500) {
+      // se a string estiver vazia
+      if (string.length === 0) {
         return {
           status: false,
-          message: "A descrição do produto deve ter no máximo 500 caracteres!",
+          message: "O campo não pode estar vazio!",
         };
       }
 
-      // trata o preço
-      this.price = this.price.replace(",", ".");
-      this.price = parseFloat(this.price);
-
-      // verifica se o preço é um número
-      if (isNaN(this.price)) {
+      // não pode conter apenas espaços em branco ou números 
+      if (string.trim() === "" || !isNaN(string)) {
         return {
           status: false,
-          message: "O preço deve ser um número!",
+          message: "O campo não pode conter apenas espaços em branco ou números!",
         };
       }
 
-      // verifica se o preço é maior que zero
-      if (this.price <= 0) {
+      // se a string for maior que o máximo
+      if (string.length > max) {
         return {
           status: false,
-          message: "O preço deve ser maior que zero!",
+          message: `O campo deve ter no máximo ${max} caracteres!`,
         };
       }
 
-      // verifica se a quantidade é um número
-      if (isNaN(this.quantity)) {
-        return {
-          status: false,
-          message: "A quantidade deve ser um número!",
-        };
-      }
-
-      // verifica se a quantidade é maior que zero
-      if (this.quantity <= 0) {
-        return {
-          status: false,
-          message: "A quantidade deve ser maior que zero!",
-        };
-      }
-
-      // se não for possível criar o produto
-      if (!product) {
-        return {
-          status: false,
-          message: "Não foi possível criar o produto!",
-        };
-      }
-
-      // retorna o estado e a mensagem
+      // se a string estiver dentro dos limites
       return {
         status: true,
-        message: "Produto criado com sucesso!",
+        message: "String válida!",
       };
+    } catch (err) {
+      return err;
+    }
+  }
+
+  static async saveProduct(product) {
+    try {
+
+      const productExists = await Produtos.findOne({
+        where: {
+          nome: product.nome,
+        },
+      });
+
+      // cria critérios para validar o nome do produto
+      const nameCriteria = {
+        name: "nome",
+        min: 3,
+        max: 50,
+      };
+
+      // valida o nome do produto
+      const nameValidation = await Products.validateString(
+        product.nome,
+        nameCriteria.min,
+        nameCriteria.max
+      );
+
+      // se o nome do produto não for válido
+      if (!nameValidation.status) {
+        return {
+          status: false,
+          message: nameValidation.message,
+        };
+      }
+
+      // se o produto já existir
+      if (productExists) {
+        return {
+          status: false,
+          message: "Produto já cadastrado!",
+        };
+      }
+
+      const newProduct = await Produtos.create({
+        id: parseInt(),
+        nome: product.nome,
+        descricao: product.descricao,
+      });
+
+      // se não for possível salvar o produto
+      if (!newProduct) {
+        return {
+          status: false,
+          message: "Não foi possível salvar o produto!",
+        };
+      } else {
+        return {
+          status: true,
+          message: "Produto cadastrado com sucesso!",
+        };
+      }
     } catch (err) {
       return err;
     }
@@ -139,24 +155,96 @@ class Products {
 
   static async listProducts() {
     try {
-      const products = await Products.findAll({
-        attributes: ["id", "name", "description", "quantity", "price"],
-      });
-
-      // se não for possível listar os produtos
-      if (!products) {
-        return {
-          status: false,
-          message: "Não foi possível listar os produtos!",
-        };
-      }
-
-      // retorna os produtos
+      const products = await Produtos.findAll();
       return products;
     } catch (err) {
       return err;
     }
   }
+
+  static async updateProduct(id, product) {
+    try {
+      const productExists = await Produtos.findOne({
+        where: {
+          id: id,
+        },
+      });
+
+      // se o produto não existir
+      if (!productExists) {
+        return {
+          status: false,
+          message: "Produto não encontrado!",
+        };
+      }
+
+      const updatedProduct = await Produtos.update({
+        nome: product.nome,
+        descricao: product.descricao,
+      }, {
+        where: {
+          id: id,
+        },
+      });
+
+      // se não for possível atualizar o produto
+      if (!updatedProduct) {
+        return {
+          status: false,
+          message: "Não foi possível atualizar o produto!",
+        };
+      } else {
+        return {
+          status: true,
+          message: "Produto atualizado com sucesso!",
+        };
+      }
+    } catch (err) {
+      return err;
+    }
+  }
+
+  static async deleteProduct(id) {
+
+    try {
+      const productExists = await Produtos.findOne({
+        where: {
+          id: id,
+        },
+      });
+
+      // se o produto não existir
+      if (!productExists) {
+        return {
+          status: false,
+          message: "Produto não encontrado!",
+        };
+      }
+
+      const deletedProduct = await Produtos.destroy({
+        where: {
+          id: id,
+        },
+      });
+
+      // se não for possível deletar o produto
+      if (!deletedProduct) {
+        return {
+          status: false,
+          message: "Não foi possível deletar o produto!",
+        };
+      } else {
+        return {
+          status: true,
+          message: "Produto deletado com sucesso!",
+        };
+      }
+
+    } catch (error) {
+      return error;
+    }
+  }
+
 }
 
 module.exports = {
