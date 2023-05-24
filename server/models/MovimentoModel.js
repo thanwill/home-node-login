@@ -27,7 +27,11 @@ const Movimentos = database.define('Movimentos', {
       type: DataTypes.ENUM('compra', 'venda', 'transferencia', 'producao'),
       allowNull: false
     },
-
+    preco_unitario: {
+      type: DataTypes.DECIMAL(10,2),
+      allowNull: false
+    },
+    
     // FK referenciando a tabela Estoque
     estoque_id: {
       type: DataTypes.INTEGER,
@@ -44,7 +48,7 @@ const Movimentos = database.define('Movimentos', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'depositos',
+            model: 'produtos',
             key: 'id'
         },
         onUpdate: 'CASCADE',

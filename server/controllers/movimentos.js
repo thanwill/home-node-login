@@ -1,7 +1,10 @@
+const Movimentos = require("../models/movimentoModel");
 const {
-  Movimentos
-} = require("../models");
-
+  Produto
+} = require("./produtos");
+const {
+  Deposito
+} = require("./deposito");
 const Validator = require("./validation");
 
 class Movimento extends Validator {
@@ -25,36 +28,84 @@ class Movimento extends Validator {
     this.estoque_id = parseInt(estoque_id);
   }
 
-  static async listar() {
+  // salva um novo movimento
+  static async salvar(movimento) {
+    console.log(movimento);
+    const produto = await Produto.getProduct(movimento.produtos_id);
+    const estoque = await Deposito.listarId(movimento.estoque_id);
 
+    console.log(produto);
+    console.log(estoque);
     try {
-      const movimentos = await Movimentos.findAll();
 
-      if (!movimentos) {
+      if (!produto) {
         return {
           status: false,
-          message: "Não foi possível encontrar os movimentos!",
+          message: "O produto não foi encontrado!",
+        };
+      }
+      if (!estoque) {
+        return {
+          status: false,
+          message: "O depósito não foi encontrado!",
         };
       }
 
-      if (movimentos.length === 0) {
+      const newMovimento = await Movimentos.create({
+        id: parseInt(),
+        tipo: movimento.tipo,
+        quantidade: parseInt(movimento.quantidade),
+        preco_unitario: parseFloat(movimento.preco_unitario),
+        documento: movimento.documento,
+        subtipo: movimento.subtipo,
+        produtos_id: parseInt(produto.id),
+        estoque_id: parseInt(estoque.id),
+      });
+
+      // Se o produto for encontrado, adiciona os dados do produto à resposta
+      if (produto) {
+        newMovimento.dataValues.produto = produto;
+      }
+
+      // Se o estoque for encontrado, adiciona os dados do estoque à resposta
+      if (estoque) {
+        newMovimento.dataValues.estoque = estoque;
+      }
+
+      // se não for possível salvar o movimento
+      if (!newMovimento) {
         return {
           status: false,
-          message: "Não há movimentos cadastrados!",
+          message: "Não foi possível salvar o movimento!",
+        };
+      } else {
+        return {
+          status: true,
+          message: "Movimento cadastrado com sucesso!",
+          data: newMovimento
         };
       }
-      return movimentos;
-    } catch (error) {
+    } catch (err) {
       return {
         status: false,
-        message: "Erro ao salvar o depósito: " + error.message,
+        message: err.message,
+        err
       };
-
     }
-
   }
 
-
+  // lista todos os movimentos
+  static async listar() {
+    try {
+      const movimentos = await Movimentos.findAll();
+      return movimentos;
+    } catch (err) {
+      return {
+        status: false,
+        message: err.message,
+      };
+    }
+  }
 
 }
 

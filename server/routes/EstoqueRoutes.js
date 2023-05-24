@@ -1,7 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { Deposito} = require("../controllers/deposito");
-const { Produto } = require("../controllers/produtos");
+const {
+  Deposito
+} = require("../controllers/deposito");
+const {
+  Produto
+} = require("../controllers/produtos");
+const {
+  Movimento
+} = require("../controllers/movimentos");
 
 // Defina as rotas para o estoque
 router.get("/estoque", (req, res) => {
@@ -68,6 +75,8 @@ router.delete("/produtos/:id", async (req, res) => {
   }
 });
 
+// Rotas de deposito
+
 // cadastra um novo estoque Invetory
 router.post('/depositos', async (req, res) => {
   try {
@@ -116,5 +125,27 @@ router.put('/deposito/:id', async (req, res) => {
   }
 });
 
+// cria um novo movimento
+router.post('/movimentos', async (req, res) => {
+  try {
+    const movimento = await Movimento.salvar(req.body);
+    return res.json(movimento);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send(`${err.message}`);
+  }
+});
+
+// lista todos os movimentos
+router.get('/movimentos', async (req, res) => {
+  try {
+    const movimentos = await Movimento.listar();
+    res.setHeader('Content-Type', 'routerlication/json'); // define o tipo de conteúdo que será retornado
+    res.status(200).send(JSON.stringify(movimentos, null, 2));
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(`${err.message}`);
+  }
+});
 
 module.exports = router;
