@@ -4,7 +4,7 @@ const { Usuario, Administrador } = require("../controllers/usuarios");
 const auth = require("../controllers/autentication");
 
 // Defina as rotas para o usuário
-router.get("/", (req, res) => {
+router.get("/usuario", (req, res) => {
   res.send("Rota do usuário");
 });
 

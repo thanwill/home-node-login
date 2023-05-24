@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Deposito} = require("../controllers/deposito");
 const { Produto } = require("../controllers/produtos");
-const { Endereco } = require("../controllers/enderecos");
+
 // Defina as rotas para o estoque
 router.get("/estoque", (req, res) => {
   res.send("Rota do estoque");
@@ -11,7 +11,7 @@ router.get("/estoque", (req, res) => {
 // Cadastra um novo produto
 router.post("/produtos", async (req, res) => {
   try {
-    const produto = await Produto.saveProduct(req.body);
+    const produto = await Produto.salvar(req.body);
     return res.json(produto);
   } catch (err) {
 
@@ -49,7 +49,7 @@ router.get("/produtos/:id", async (req, res) => {
 // Atualiza um produto pelo id
 router.put("/produtos/:id", async (req, res) => {
   try {
-    const produto = await Produto.updateProduct(req.params.id, req.body);
+    const produto = await Produto.atualizar(req.params.id, req.body);
     res.setHeader("Content-Type", "routerlication/json");
     res.status(200).send(JSON.stringify(produto, null, 2));
   } catch (err) {
@@ -60,7 +60,7 @@ router.put("/produtos/:id", async (req, res) => {
 // Deleta um produto pelo id
 router.delete("/produtos/:id", async (req, res) => {
   try {
-    const produto = await Produto.deleteProduct(req.params.id);
+    const produto = await Produto.deletar(req.params.id);
     res.setHeader("Content-Type", "routerlication/json");
     res.status(200).send(JSON.stringify(produto, null, 2));
   } catch (err) {
@@ -71,7 +71,7 @@ router.delete("/produtos/:id", async (req, res) => {
 // cadastra um novo estoque Invetory
 router.post('/depositos', async (req, res) => {
   try {
-    const deposito = await Deposito.criarDeposito(req.body);
+    const deposito = await Deposito.salvar(req.body);
     console.log(deposito);
     return res.json(deposito);
   } catch (err) {
@@ -83,7 +83,7 @@ router.post('/depositos', async (req, res) => {
 // lista os depositos
 router.get('/depositos', async (req, res) => {
   try {
-    const depositos = await Deposito.listarDeposito();
+    const depositos = await Deposito.listar();
     res.setHeader('Content-Type', 'routerlication/json');
     res.status(200).send(JSON.stringify(depositos, null, 2));
   } catch (err) {
@@ -92,44 +92,29 @@ router.get('/depositos', async (req, res) => {
   }
 });
 
-// cadastra um novo endereço
-router.post('/enderecos', async (req, res) => {
+// lista um deposito pelo id
+router.get('/deposito/:id', async (req, res) => {
   try {
-    const endereco = await Endereco.salvar(req.body);
-    return res.json(endereco);
-  } catch (err) {
-    console.error(err.message);
-    return res.status(500).send(`${err.message}`);
-  }
-});
-
-// lista os endereços cadastrados por id
-router.get('/enderecos/:id', async (req, res) => {
-  try {
-    const endereco = await Endereco.getEndereco(req.params.id);
+    const deposito = await Deposito.listarId(req.params.id);
     res.setHeader('Content-Type', 'routerlication/json');
-    res.status(200).send(JSON.stringify(endereco, null, 2));
+    res.status(200).send(JSON.stringify(deposito, null, 2));
   } catch (err) {
     console.error(err);
     res.status(500).send(`${err}`);
   }
 });
 
-// lista os endereços cadastrados 
-router.get('/enderecos', async (req, res) => {
+// atualiza um deposito pelo id
+router.put('/deposito/:id', async (req, res) => {
   try {
-    const enderecos = await Endereco.listar();
+    const deposito = await Deposito.atualizar(req.params.id, req.body);
     res.setHeader('Content-Type', 'routerlication/json');
-    res.status(200).send(JSON.stringify(enderecos, null, 2));
+    res.status(200).send(JSON.stringify(deposito, null, 2));
   } catch (err) {
     console.error(err);
     res.status(500).send(`${err}`);
   }
 });
 
-// cria uma rota para previnir erros no api
-router.get("*", (req, res) => {
-  res.status(404).send("Esta rota não existe!");
-});
 
 module.exports = router;

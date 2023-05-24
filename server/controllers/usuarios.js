@@ -15,7 +15,6 @@ class Usuario {
 
     static async save(user) {
         try {
-
             const birthday = new Date(user.nascimento);
             const formattedBirthday = birthday.toLocaleDateString('pt-BR', {
                 year: 'numeric',
@@ -134,7 +133,10 @@ class Usuario {
             return user;
         } catch (err) {
             console.error(err);
-            return err;
+            return {
+        status: false,
+        message: "Erro ao salvar o depósito: " + err.message,
+      };
         }
     }
 
@@ -196,7 +198,10 @@ class Usuario {
 
         } catch (err) {
             console.error(err);
-            return err;
+            return {
+        status: false,
+        message: "Erro ao salvar o depósito: " + err.message,
+      };
         }
     }
 
@@ -212,7 +217,10 @@ class Usuario {
 
         } catch (err) {
             console.error(err);
-            return err;
+            return {
+        status: false,
+        message: "Erro ao salvar o depósito: " + err.message,
+      };
         }
     }
 
@@ -276,7 +284,10 @@ class Administrador extends User {
             return user;
         } catch (err) {
             console.error(err);
-            return err;
+            return {
+        status: false,
+        message: "Erro ao salvar o depósito: " + err.message,
+      };
         }
     }
     static async deletarUsuario(id) {
@@ -292,7 +303,10 @@ class Administrador extends User {
             return user;
         } catch (err) {
             console.error(err);
-            return err;
+            return {
+        status: false,
+        message: "Erro ao salvar o depósito: " + err.message,
+      };
         }
     }
 }

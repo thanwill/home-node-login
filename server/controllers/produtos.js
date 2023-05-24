@@ -46,11 +46,14 @@ class Produto {
           message: "String válida!",
         };
       } catch (err) {
-        return err;
+        return {
+        status: false,
+        message: "Erro ao salvar o depósito: " + err.message,
+      };
       }
     }
   
-    static async saveProduct(product) {
+    static async salvar(product) {
       try {
   
         const productExists = await Produtos.findOne({
@@ -108,7 +111,10 @@ class Produto {
           };
         }
       } catch (err) {
-        return err;
+        return {
+        status: false,
+        message: "Erro ao salvar o depósito: " + err.message,
+      };
       }
     }
   
@@ -117,7 +123,10 @@ class Produto {
         const produtos = await Produtos.findAll();
         return produtos;
       } catch (err) {
-        return err;
+        return {
+        status: false,
+        message: "Erro ao salvar o depósito: " + err.message,
+      };
       }
     }
   
@@ -139,12 +148,15 @@ class Produto {
   
         return product;
       } catch (err) {
-        return err;
+        return {
+        status: false,
+        message: "Erro ao salvar o depósito: " + err.message,
+      };
       }
     }
   
   
-    static async updateProduct(id, product) {
+    static async atualizar(id, product) {
       try {
         const productExists = await Produtos.findOne({
           where: {
@@ -182,11 +194,14 @@ class Produto {
           };
         }
       } catch (err) {
-        return err;
+        return {
+        status: false,
+        message: "Erro ao salvar o depósito: " + err.message,
+      };
       }
     }
   
-    static async deleteProduct(id) {
+    static async deletar(id) {
   
       try {
         const productExists = await Produtos.findOne({
