@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const database = require('./database');
+const database = require('./DatabaseModel');
 
 const Address = database.define('Address', {
     id: {
@@ -40,24 +40,16 @@ const Address = database.define('Address', {
     cep: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    // fk de usuario
-    usuario_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'usuarios',
-            key: 'id'
-        }
-
     }
+
 }, {
     tableName: 'endereco',
     timestamps: true, 
     indexes: [
         {
             unique: true,
-            fields: ['usuario_id']
+            fields: ['id']
+            
         }
     ]
 });

@@ -12,12 +12,11 @@ app.use(bodyPerser.json());
 
 // sincronizacao com o banco de dados
 (async () => {
-  const database = require("./models/database");
-  const Produtos = require("./models/ProductModel");
-  const Movimentos = require("./models/MovementsModel");
-  const Endereco = require("./models/AddressModel");
+  const database = require("./models/DatabaseModel");
+  const Produtos = require("./models/ProdutoModel");
+  const Movimentos = require("./models/movimentoModel");
+  const Endereco = require("./models/EnderecosModel");
   const Usuarios = require("./models/UserModel");
-  const Depositos = require("./models/DepositModel");
 
   try {
     await database.sync();

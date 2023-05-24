@@ -40,11 +40,11 @@ class Usuario {
 
             if (userExists) {
                 throw new Error('Email já cadastrado');
-            } 
+            }
             if (cpfExists) {
                 throw new Error('CPF já cadastrado');
-            } 
-            
+            }
+
             if (user.senha !== user.csenha) {
                 throw new Error('As senhas não são iguais');
             }
@@ -73,7 +73,16 @@ class Usuario {
     static async getAllUsers() {
         try {
             const users = await User.findAll();
+
+            if (!users) {
+                return {
+                    status: false,
+                    message: "Não foi possível encontrar os usuários",
+                };
+            }
+
             return users;
+
         } catch (err) {
             throw err;
         }
@@ -114,9 +123,14 @@ class Usuario {
     }
 
     static async getUserById(id) {
-
         try {
             const user = await User.findByPk(id);
+            if (!user) {
+                return {
+                    status: false,
+                    message: "Usuário não encontrado!"
+                }
+            }
             return user;
         } catch (err) {
             console.error(err);
@@ -127,20 +141,35 @@ class Usuario {
     // atualiza o email do usuario
     static async updateEmail(id, email) {
 
-        // verifica se o email já está cadastrado
+        // verifica se o email já está cadastrado e se o usuario existe
+
         const userExists = await User.findOne({
             where: {
-                email: this.email
+                email: email
             }
         });
 
-        if (!userExists) {
-            throw new Error('O email não está cadastrado!');
+
+        if (userExists) {
+            return {
+                status: false,
+                message: "O email já está cadastrado!"
+            }
+        }
+
+        // verifica se o usuario existe
+        const user = await User.findByPk(id);
+
+        if (!user) {
+            return {
+                status: false,
+                message: "Usuário não encontrado!"
+            }
         }
 
         try {
 
-            !this.findByPk(id) ? console.log('Usuário não encontrado!') : await User.update({
+            await User.update({
                 email: email
             }, {
                 where: {
@@ -161,7 +190,7 @@ class Usuario {
                 endereco: endereco
             }, {
                 where: {
-                    id: id // procura pelo id do usuario no banco de dados e atualiza o endereco do usuario com o endereco passado como parametro
+                    id: id
                 }
             });
 

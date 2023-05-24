@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const database = require('./database');
+const database = require('./DatabaseModel');
 const Depositos = database.define('Depositos', {
     id: {
         type: DataTypes.INTEGER,

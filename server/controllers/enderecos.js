@@ -1,7 +1,8 @@
-class Address {
+const Enderecos = require('../models/EnderecosModel');
 
-    constructor(id, rua, numero, complemento, bairro, cidade, estado, pais, cep, user_id) {
-        this.id = id;
+class Endereco {
+
+    constructor(rua, numero, complemento, bairro, cidade, estado, pais, cep, user_id) {
         this.rua = rua;
         this.numero = numero;
         this.complemento = complemento;
@@ -9,33 +10,53 @@ class Address {
         this.cidade = cidade;
         this.estado = estado;
         this.pais = pais;
-        this.cep = cep;        
-        this.user_id = user_id;
+        this.cep = cep;
     }
 
-    static async save(address) {
+    static async salvar(endereco) {
 
         try {
-            const newAddress = await Address.create({
+            const NovoEndereco = await Enderecos.create({
                 id: parseInt(),
-                rua: address.rua,
-                numero: address.numero,
-                complemento: address.complemento,
-                bairro: address.bairro,
-                cidade: address.cidade,
-                estado: address.estado,
-                pais: address.pais,
-                cep: address.cep,
-                user_id: address.user_id
+                rua: endereco.rua,
+                numero: endereco.numero,
+                complemento: endereco.complemento,
+                bairro: endereco.bairro,
+                cidade: endereco.cidade,
+                estado: endereco.estado,
+                pais: endereco.pais,
+                cep: endereco.cep,
+                user_id: endereco.user_id
             });
 
-            return newAddress;
+            return NovoEndereco;
 
+        } catch (err) {
+            throw new Error(`${err}`);
+        }
+    }
+    
+    static async getEndereco(id) {
+        try {
+            const endereco = await Enderecos.findOne({
+                where: {
+                    id: id
+                }
+            });
+            return endereco;
+        } catch (err) {
+            throw new Error(`${err}`);
+        }
+    }
+
+    static async listar(){
+        try {
+            const endereco = await Enderecos.findAll();
+            return endereco;
         } catch (err) {
             throw new Error(`${err}`);
         }
     }
 
 }
-
-module.exports = Address;
+module.exports = {Endereco};

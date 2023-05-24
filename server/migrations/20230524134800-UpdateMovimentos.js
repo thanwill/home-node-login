@@ -11,11 +11,14 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+    // altera subtipo para receber apenas 'entrada', 'saida'
+    await queryInterface.changeColumn('movimentos', 'subtipo', {
+      type: Sequelize.ENUM('entrada', 'saida'),
+      allowNull: false
+    });
   }
+
 };
+
+// cria uma nova migration 
+// npx sequelize-cli migration:generate --name update-movimentos
