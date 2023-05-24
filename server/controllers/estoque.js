@@ -162,6 +162,29 @@ class Products {
     }
   }
 
+  static async getProduct(id) {
+    try {
+      const product = await Produtos.findOne({
+        where: {
+          id: id,
+        },
+      });
+
+      // se o produto não existir
+      if (!product) {
+        return {
+          status: false,
+          message: "Produto não encontrado!",
+        };
+      }
+
+      return product;
+    } catch (err) {
+      return err;
+    }
+  }
+
+
   static async updateProduct(id, product) {
     try {
       const productExists = await Produtos.findOne({

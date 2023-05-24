@@ -22,5 +22,8 @@ module.exports = {
   },
 };
 
+// código para criar uma migration
+// npx sequelize-cli migration:generate --name AlteraTabelaProdutos
+
 // código para executar essa migration
 // npx sequelize-cli db:migrate --env development

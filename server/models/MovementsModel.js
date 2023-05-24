@@ -24,7 +24,7 @@ const Movimentos = database.define('Movimentos', {
       allowNull: false
     },
     subtipo : {
-      type: DataTypes.ENUM('compra', 'venda', 'transferencia', 'producao', 'simples transferência'),
+      type: DataTypes.ENUM('compra', 'venda', 'transferencia', 'producao'),
       allowNull: false
     },
 

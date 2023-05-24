@@ -36,6 +36,17 @@ router.get("/produtos", async (req, res) => {
   }
 });
 
+// Lista um produto pelo id
+router.get("/produtos/:id", async (req, res) => {
+  try {
+    const produto = await Products.getProduct(req.params.id);
+    res.setHeader("Content-Type", "routerlication/json");
+    res.status(200).send(JSON.stringify(produto, null, 2));
+  } catch (err) {
+    res.status(500).send(`${err}`);
+  }
+});
+
 // Atualiza um produto pelo id
 router.put("/produtos/:id", async (req, res) => {
   try {
