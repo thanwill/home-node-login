@@ -31,7 +31,6 @@ const Movimentos = database.define('Movimentos', {
       type: DataTypes.DECIMAL(10,2),
       allowNull: false
     },
-    
     // FK referenciando a tabela Estoque
     estoque_id: {
       type: DataTypes.INTEGER,
@@ -43,16 +42,16 @@ const Movimentos = database.define('Movimentos', {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     },
-    // FK referenciando a tabela Produtos
-    produto_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'produtos',
-            key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+    // FK referenciando a tabela Produto
+    produto_id : {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'produtos',
+        key: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     }
   }, {
     tableName: 'movimentos',

@@ -14,7 +14,7 @@ class Movimento extends Validator {
     preco_unitario,
     documento,
     subtipo,
-    produtos_id,
+    produto_id,
     estoque_id
   ) {
     super();
@@ -24,7 +24,7 @@ class Movimento extends Validator {
     this.preco_unitario = parseFloat(preco_unitario);
     this.documento = documento; // documento: nota fiscal ou ordem de serviço
     this.subtipo = subtipo; // subtipo: compra, venda, devolução, etc
-    this.produtos_id = parseInt(produtos_id);
+    this.produto_id = parseInt(produto_id);
     this.estoque_id = parseInt(estoque_id);
   }
 
@@ -34,22 +34,21 @@ class Movimento extends Validator {
     const produto = await Produto.getProduct(movimento.produtos_id);
     const estoque = await Deposito.listarId(movimento.estoque_id);
 
-    console.log(produto);
-    console.log(estoque);
-    try {
+    if (!produto) {
+      return {
+        status: false,
+        message: "O produto não foi encontrado!",
+      };
+    }
 
-      if (!produto) {
-        return {
-          status: false,
-          message: "O produto não foi encontrado!",
-        };
-      }
-      if (!estoque) {
-        return {
-          status: false,
-          message: "O depósito não foi encontrado!",
-        };
-      }
+      
+    if (!estoque) {
+      return {
+        status: false,
+        message: "O depósito não foi encontrado!",
+      };
+    }
+    try {
 
       const newMovimento = await Movimentos.create({
         id: parseInt(),
@@ -58,8 +57,8 @@ class Movimento extends Validator {
         preco_unitario: parseFloat(movimento.preco_unitario),
         documento: movimento.documento,
         subtipo: movimento.subtipo,
-        produtos_id: parseInt(produto.id),
-        estoque_id: parseInt(estoque.id),
+        produto_id: parseInt(movimento.produto_id),
+        estoque_id: parseInt(movimento.estoque_id),
       });
 
       // Se o produto for encontrado, adiciona os dados do produto à resposta
@@ -89,7 +88,6 @@ class Movimento extends Validator {
       return {
         status: false,
         message: err.message,
-        err
       };
     }
   }
